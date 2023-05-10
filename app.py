@@ -1,6 +1,6 @@
 
 
-__version__ = "0.3.1"
+#__version__ = "0.3.1"
 __all__ = ["SimpleHTTPRequestHandler"]
 
 import os
@@ -42,7 +42,7 @@ def format_date(timestamp):
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     
 
-    server_version = "simple_http_server/" + __version__
+    #server_version = "simple_http_server/" + __version__
 
     def do_GET(self):
         if self.path.startswith('/search?q='):
@@ -85,19 +85,24 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         f.write(b'<title>Directory listing for %s</title>\n' % display_path.encode('utf-8'))
         f.write(b'<style>\n')
         f.write(b'body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #F2F2F2; }\n')
+        f.write(b'img { display: block; width: 60%; margin-left: auto; margin-right: auto;}\n')
         f.write(b'.container { max-width: 800px; margin: 0 auto; padding: 20px; background-color: #FFF; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); }\n')
         f.write(b'h1 { text-align: center; margin-bottom: 20px; }\n')
         f.write(b'form { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }\n')
         f.write(b'input[type="file"] { margin-bottom: 10px; }\n')
-        f.write(b'input[type="submit"] { background-color: #4CAF50; color: #FFF; padding: 10px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease-in-out; }\n')
+        f.write(b'input[type="submit"] { background-color: #13274D; color: #FFF; padding: 10px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease-in-out; }\n')
         f.write(b'input[type="submit"]:hover { background-color: #3E8E41; }\n')
         f.write(b'table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }\n')
         f.write(b'th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }\n')
-        f.write(b'th { background-color: #4CAF50; color: #FFF; }\n')
+        f.write(b'th { background-color: #13274D; color: #FFF; }\n')
         f.write(b'a { color: #000; text-decoration: none; }\n')
         f.write(b'a:hover { text-decoration: underline; }\n')
         f.write(b'</style>\n')
         f.write(b'</head>\n')
+        #f.write(b'<div style=\"text-align: center;\">\n')
+        f.write(b'<img width=\"400\" src=\"https://images2.imgbox.com/46/aa/qG7wrGvc_o.png\">\n')
+        f.write(b'<h1>Share files and your mom</h1>')
+        #f.write(b'<\div>\n')
         f.write(b"<hr>\n")
         f.write(b"<h1>Upload File</h1>\n")
         f.write(b"<form ENCTYPE=\"multipart/form-data\" method=\"post\" style=\"margin-bottom: 1em;\">\n")
@@ -109,6 +114,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         f.write(b"<input type=\"search\" id=\"search\" name=\"q\" placeholder=\"Search...\">\n")
         f.write(b"<button type=\"submit\">Go</button>\n")
         f.write(b"</form>\n")
+        #f.write(b'<img width=\"400\" src=\"https://www.hubspot.com/hubfs/image-hubspot-centering-css.jpeg\">\n')
         # f.write(b"<html>\n<title>Directory listing for %s</title>\n" % display_path.encode('utf-8'))
         # f.write(b"<body>\n<h2>Directory listing for %s</h2>\n" % display_path.encode('utf-8'))
         # f.write(b"<hr>\n")
@@ -181,19 +187,24 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
 
         r, info = self.deal_post_data()
-        print(r, info, "byNolaXoda: ", self.client_address)
+        print(r, info, "addresss: ", self.client_address)
         f = BytesIO()
         f.write(b'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
         f.write(b"<html>\n<title>Upload Result Page</title>\n")
-        f.write(b"<body>\n<h2>Upload Result Page</h2>\n")
+        f.write(b"<body>\n")
+        f.write(b"<div style=\"text-align: center;\">")
+        f.write(b'<img width=\"400\" src=\"https://images2.imgbox.com/46/aa/qG7wrGvc_o.png\">\n')
+        f.write(b"</div>\n")
+        f.write(b'<h1><center>Share files in your network</h1>\n')
+        f.write(b"<h2><center>Upload Result Page</h2>\n")
         f.write(b"<hr>\n")
         if r:
-            f.write(b"<strong>Success:</strong>")
+            f.write(b"<strong><center>Success:</strong>")
         else:
-            f.write(b"<strong>Failed:</strong>")
+            f.write(b"<strong><center>Failed:</strong>")
         f.write(info.encode('utf-8'))
         f.write(b"<br><a href=\".\">back</a>")
-        f.write(b"<hr><small>Powered By: Tsunderead - 1")
+        f.write(b"<hr><small><center>Powered By: Tsunderead - 1 ")
         f.write(b"<a href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\">")
         f.write(b"here</a>.</small></body>\n</html>\n")
         length = f.tell()
@@ -300,18 +311,21 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         f.write(b'<style>\n')
         f.write(b'body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #F2F2F2; }\n')
         f.write(b'.container { max-width: 800px; margin: 0 auto; padding: 20px; background-color: #FFF; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); }\n')
+        f.write(b'img { display: block; width: 60%; margin-left: auto; margin-right: auto;}\n')
         f.write(b'h1 { text-align: center; margin-bottom: 20px; }\n')
         f.write(b'form { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }\n')
         f.write(b'input[type="file"] { margin-bottom: 10px; }\n')
-        f.write(b'input[type="submit"] { background-color: #4CAF50; color: #FFF; padding: 10px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease-in-out; }\n')
+        f.write(b'input[type="submit"] { background-color: #13274D; color: #FFF; padding: 10px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease-in-out; }\n')
         f.write(b'input[type="submit"]:hover { background-color: #3E8E41; }\n')
         f.write(b'table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }\n')
         f.write(b'th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }\n')
-        f.write(b'th { background-color: #4CAF50; color: #FFF; }\n')
+        f.write(b'th { background-color: #13274D; color: #FFF; }\n')
         f.write(b'a { color: #000; text-decoration: none; }\n')
         f.write(b'a:hover { text-decoration: underline; }\n')
         f.write(b'</style>\n')
         f.write(b'</head>\n')
+        f.write(b'<img width=\"400\" src=\"https://images2.imgbox.com/46/aa/qG7wrGvc_o.png\">\n')
+        f.write(b'<h1>Share files and your mom</h1>\n')
         f.write(b"<hr>\n")
         f.write(b"<h1>Upload File</h1>\n")
         f.write(b"<form ENCTYPE=\"multipart/form-data\" method=\"post\" style=\"margin-bottom: 1em;\">\n")
@@ -430,7 +444,7 @@ def signal_handler(signal, frame):
 def _argparse():
     parser = argparse.ArgumentParser()
     parser.add_argument('--bind', '-b', metavar='ADDRESS', default='0.0.0.0', help='Specify alternate bind address [default: all interfaces]')
-    parser.add_argument('--version', '-v', action='version', version=__version__)
+    #parser.add_argument('--version', '-v', action='version', version=__version__)
     parser.add_argument('port', action='store', default=8000, type=int, nargs='?', help='Specify alternate port [default: 8000]')
     return parser.parse_args()
 
@@ -442,7 +456,7 @@ def main():
     signal.signal(signal.SIGTERM, signal_handler)
     httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
     server = httpd.socket.getsockname()
-    print("server_version: " + SimpleHTTPRequestHandler.server_version + ", python_version: " + SimpleHTTPRequestHandler.sys_version)
+    #print("server_version: " + SimpleHTTPRequestHandler.server_version + ", python_version: " + SimpleHTTPRequestHandler.sys_version)
     print("sys encoding: " + sys.getdefaultencoding())
     print("Serving http on: " + str(server[0]) + ", port: " + str(server[1]) + " ... (http://" + server[0] + ":" + str(server[1]) + "/)")
     httpd.serve_forever()
