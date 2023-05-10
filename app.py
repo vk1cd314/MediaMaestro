@@ -17,7 +17,7 @@ import urllib.parse
 from urllib.parse import quote
 from urllib.parse import unquote
 from http.server import HTTPServer
-from http.server import BaseHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 
 import datetime
@@ -445,7 +445,7 @@ def main():
     server_address = (args.bind, args.port)
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
+    httpd = ThreadingHTTPServer(server_address, SimpleHTTPRequestHandler)
     server = httpd.socket.getsockname()
     print("sys encoding: " + sys.getdefaultencoding())
     print("Serving http on: " + str(server[0]) + ", port: " + str(server[1]) + " ... (http://" + server[0] + ":" + str(server[1]) + "/)")
