@@ -36,8 +36,6 @@ def format_date(timestamp):
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
-    
-
     def do_GET(self):
         if self.path.startswith('/search?q='):
             query = self.path.split('=')[1]
@@ -93,7 +91,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         f.write(b'</head>\n')
         #f.write(b'<div style=\"text-align: center;\">\n')
         f.write(b'<img width=\"400\" src=\"https://images2.imgbox.com/46/aa/qG7wrGvc_o.png\">\n')
-        f.write(b'<h1>Share files and your mom</h1>')
+        f.write(b'<h1>Share files</h1>')
         #f.write(b'<\div>\n')
         f.write(b"<hr>\n")
         f.write(b"<h1>Upload File</h1>\n")
@@ -119,6 +117,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         # f.write(b"<h1>Directories</h1>\n")
         for name in list_dir:
             fullname = os.path.join(path, name)
+            size = os.stat(fullname).st_size
+            modified_time = os.stat(fullname).st_mtime
             display_name = linkname = name
             # Append / for directories or @ for symbolic links
             wat = False
@@ -132,30 +132,32 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 # Note: a link to a directory displays with @ and links with /
             if wat:
                 # f.write(b'<li><a href="%s">%s</a>\n' % (quote(linkname).encode('utf-8'), escape(display_name).encode('utf-8')))
-                new_list_1.append((linkname, display_name))
+                new_list_1.append((linkname, display_name, size, modified_time))
             else:
-                new_list.append((linkname, display_name))
+                new_list.append((linkname, display_name, size, modified_time))
         # f.write(b"<h1>Files</h1>\n")
         # for linkname, display_name in new_list:
         #     f.write(b'<li><a href="%s">%s</a>\n' % (quote(linkname).encode('utf-8'), escape(display_name).encode('utf-8')))
         f.write(b'<hr>\n<h2>Directories:</h2>\n')
-        f.write(b'<table style="width:100%">\n')
+        f.write(b'<table style="width:100%" align="center">\n')
         f.write(b'<tr>\n<th>Name</th>\n<th>Size</th>\n<th>Last Modified</th>\n</tr>\n')
-        for linkname, display_name in new_list_1:
+        for linkname, display_name, size, modified_time in new_list_1:
+            print(linkname, display_name, size, modified_time)
             f.write(b'<tr>\n')
             f.write(b'<td><a href="%s">%s</a></td>\n' % (quote(linkname).encode('utf-8'), escape(display_name).encode('utf-8')))
-            # f.write(b'<td>%s</td>\n' % format_size(file_size).encode('utf-8'))
-            # f.write(b'<td>%s</td>\n' % format_date(mod_time).encode('utf-8'))
+            f.write(b'<td>%s</td>\n' % format_size(size).encode('utf-8'))
+            f.write(b'<td>%s</td>\n' % format_date(modified_time).encode('utf-8'))
             f.write(b'</tr>\n')
         f.write(b'</table>\n')
         f.write(b'<hr>\n<h2>Files:</h2>\n')
-        f.write(b'<table style="width:100%">\n')
+        f.write(b'<table style="width:100%" align="center">\n')
         f.write(b'<tr>\n<th>Name</th>\n<th>Size</th>\n<th>Last Modified</th>\n</tr>\n')
-        for linkname, display_name in new_list:
+        for linkname, display_name, size, modified_time in new_list:
+            print(linkname, display_name, size, modified_time)
             f.write(b'<tr>\n')
             f.write(b'<td><a href="%s">%s</a></td>\n' % (quote(linkname).encode('utf-8'), escape(display_name).encode('utf-8')))
-            # f.write(b'<td>%s</td>\n' % format_size(file_size).encode('utf-8'))
-            # f.write(b'<td>%s</td>\n' % format_date(mod_time).encode('utf-8'))
+            f.write(b'<td>%s</td>\n' % format_size(size).encode('utf-8'))
+            f.write(b'<td>%s</td>\n' % format_date(modified_time).encode('utf-8'))
             f.write(b'</tr>\n')
         f.write(b'</table>\n')
 
@@ -313,7 +315,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         f.write(b'</style>\n')
         f.write(b'</head>\n')
         f.write(b'<img width=\"400\" src=\"https://images2.imgbox.com/46/aa/qG7wrGvc_o.png\">\n')
-        f.write(b'<h1>Share files and your mom</h1>\n')
+        f.write(b'<h1>Share files</h1>\n')
         f.write(b"<hr>\n")
         f.write(b"<h1>Upload File</h1>\n")
         f.write(b"<form ENCTYPE=\"multipart/form-data\" method=\"post\" style=\"margin-bottom: 1em;\">\n")
@@ -337,6 +339,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         # f.write(b"<h1>Directories</h1>\n")
         for name in list_dir:
             fullname = os.path.join(path, name)
+            size = os.stat(fullname).st_size
+            modified_time = os.stat(fullname).st_mtime
             display_name = linkname = name
             # Append / for directories or @ for symbolic links
             wat = False
@@ -350,30 +354,32 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 # Note: a link to a directory displays with @ and links with /
             if wat:
                 # f.write(b'<li><a href="%s">%s</a>\n' % (quote(linkname).encode('utf-8'), escape(display_name).encode('utf-8')))
-                new_list_1.append((linkname, display_name))
+                new_list_1.append((linkname, display_name, size, modified_time))
             else:
-                new_list.append((linkname, display_name))
+                new_list.append((linkname, display_name, size, modified_time))
         # f.write(b"<h1>Files</h1>\n")
         # for linkname, display_name in new_list:
         #     f.write(b'<li><a href="%s">%s</a>\n' % (quote(linkname).encode('utf-8'), escape(display_name).encode('utf-8')))
         f.write(b'<hr>\n<h2>Directories:</h2>\n')
-        f.write(b'<table style="width:100%">\n')
+        f.write(b'<table style="width:100%" align="center">\n')
         f.write(b'<tr>\n<th>Name</th>\n<th>Size</th>\n<th>Last Modified</th>\n</tr>\n')
-        for linkname, display_name in new_list_1:
+        for linkname, display_name, size, modified_time in new_list_1:
+            print(linkname, display_name, size, modified_time)
             f.write(b'<tr>\n')
             f.write(b'<td><a href="%s">%s</a></td>\n' % (quote(linkname).encode('utf-8'), escape(display_name).encode('utf-8')))
-            # f.write(b'<td>%s</td>\n' % format_size(file_size).encode('utf-8'))
-            # f.write(b'<td>%s</td>\n' % format_date(mod_time).encode('utf-8'))
+            f.write(b'<td>%s</td>\n' % format_size(size).encode('utf-8'))
+            f.write(b'<td>%s</td>\n' % format_date(modified_time).encode('utf-8'))
             f.write(b'</tr>\n')
         f.write(b'</table>\n')
         f.write(b'<hr>\n<h2>Files:</h2>\n')
-        f.write(b'<table style="width:100%">\n')
+        f.write(b'<table style="width:100%" align="center">\n')
         f.write(b'<tr>\n<th>Name</th>\n<th>Size</th>\n<th>Last Modified</th>\n</tr>\n')
-        for linkname, display_name in new_list:
+        for linkname, display_name, size, modified_time in new_list:
+            print(linkname, display_name, size, modified_time)
             f.write(b'<tr>\n')
             f.write(b'<td><a href="%s">%s</a></td>\n' % (quote(linkname).encode('utf-8'), escape(display_name).encode('utf-8')))
-            # f.write(b'<td>%s</td>\n' % format_size(file_size).encode('utf-8'))
-            # f.write(b'<td>%s</td>\n' % format_date(mod_time).encode('utf-8'))
+            f.write(b'<td>%s</td>\n' % format_size(size).encode('utf-8'))
+            f.write(b'<td>%s</td>\n' % format_date(modified_time).encode('utf-8'))
             f.write(b'</tr>\n')
         f.write(b'</table>\n')
 
