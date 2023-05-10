@@ -1,8 +1,4 @@
 
-
-#__version__ = "0.3.1"
-__all__ = ["SimpleHTTPRequestHandler"]
-
 import os
 import sys
 import argparse
@@ -42,11 +38,8 @@ def format_date(timestamp):
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     
 
-    #server_version = "simple_http_server/" + __version__
-
     def do_GET(self):
         if self.path.startswith('/search?q='):
-            # This is a search query
             query = self.path.split('=')[1]
             print(f"Search query: {query}")
             path = translate_path(self.path)
@@ -65,9 +58,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def filter(self, path):
         print(path)
         query_params = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
-        search_query = query_params.get("q", [""])[0] # default to empty string if "q" parameter is not present
+        search_query = query_params.get("q", [""])[0] 
 
-        # Filter files by search query
         
         try:
             path = path[:-7]
@@ -229,7 +221,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         remain_bytes -= len(line)
         fn = re.findall(r'Content-Disposition.*name="file"; filename="(.*)"', line.decode('utf-8'))
         if not fn:
-            return False, "Can't find out file name..."
+            return False, "Can't find file name"
         path = translate_path(self.path)
         fn = os.path.join(path, fn[0])
         while os.path.exists(fn):
@@ -241,7 +233,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         try:
             out = open(fn, 'wb')
         except IOError:
-            return False, "Can't create file to write, do you have permission to write?"
+            return False, "No write permission"
 
         pre_line = self.rfile.readline()
         remain_bytes -= len(pre_line)
@@ -265,7 +257,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         path = translate_path(self.path)
         if os.path.isdir(path):
             if not self.path.endswith('/'):
-                # redirect browser - doing basically what apache does
                 self.send_response(301)
                 self.send_header("Location", self.path + "/")
                 self.end_headers()
@@ -279,9 +270,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 return self.list_directory(path)
         content_type = self.guess_type(path)
         try:
-            # Always read in binary mode. Opening files in text mode may cause
-            # newline translations, making the actual size of the content
-            # transmitted *less* than the content-length!
             f = open(path, 'rb')
         except IOError:
             self.send_error(404, "File not found")
@@ -411,10 +399,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             return self.extensions_map['']
 
     if not mimetypes.inited:
-        mimetypes.init()  # try to read system mime.types
+        mimetypes.init()  
     extensions_map = mimetypes.types_map.copy()
     extensions_map.update({
-        '': 'application/octet-stream',  # Default
+        '': 'application/octet-stream',  
         '.py': 'text/plain',
         '.c': 'text/plain',
         '.h': 'text/plain',
@@ -422,7 +410,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 def translate_path(path):
-    # abandon query parameters
     path = path.split('?', 1)[0]
     path = path.split('#', 1)[0]
     path = posixpath.normpath(unquote(path))
@@ -444,19 +431,16 @@ def signal_handler(signal, frame):
 def _argparse():
     parser = argparse.ArgumentParser()
     parser.add_argument('--bind', '-b', metavar='ADDRESS', default='0.0.0.0', help='Specify alternate bind address [default: all interfaces]')
-    #parser.add_argument('--version', '-v', action='version', version=__version__)
     parser.add_argument('port', action='store', default=8000, type=int, nargs='?', help='Specify alternate port [default: 8000]')
     return parser.parse_args()
 
 def main():
     args = _argparse()
-    # print(args)
     server_address = (args.bind, args.port)
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
     server = httpd.socket.getsockname()
-    #print("server_version: " + SimpleHTTPRequestHandler.server_version + ", python_version: " + SimpleHTTPRequestHandler.sys_version)
     print("sys encoding: " + sys.getdefaultencoding())
     print("Serving http on: " + str(server[0]) + ", port: " + str(server[1]) + " ... (http://" + server[0] + ":" + str(server[1]) + "/)")
     httpd.serve_forever()
